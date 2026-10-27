@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: #f9f9f9;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .font-serif {
+  font-family: "Playfair Display", Georgia, serif;
+  letter-spacing: -0.015em;
+}
+
+/* Custom Magazine Content Styling */
+.magazine-content {
+  color: #2c2c2c;
+  font-size: 1.125rem;
+  line-height: 1.85;
+  font-weight: 400;
+}
+
+.magazine-content p {
+  margin-bottom: 1.75rem;
+  letter-spacing: -0.003em;
+}
+
+.magazine-content p:first-of-type::first-letter {
+  font-family: "Playfair Display", serif;
+  font-size: 4rem;
+  float: left;
+  line-height: 0.85;
+  margin-right: 0.75rem;
+  margin-top: 0.25rem;
+  color: #111;
+  font-weight: 700;
+}
+
+.magazine-content h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 2.75rem;
+  margin-bottom: 1.25rem;
+  color: #111;
+  letter-spacing: -0.02em;
+}
+
+.magazine-content h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #111;
+}
+
+.magazine-content blockquote {
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-size: 1.35rem;
+  line-height: 1.6;
+  border-left: 3px solid #111;
+  padding-left: 1.5rem;
+  margin: 2.25rem 0;
+  color: #333;
+}
+
+.magazine-content ul, .magazine-content ol {
+  margin-bottom: 1.75rem;
+  padding-left: 1.5rem;
+}
+
+.magazine-content ul {
+  list-style-type: disc;
+}
+
+.magazine-content ol {
+  list-style-type: decimal;
+}
+
+.magazine-content li {
+  margin-bottom: 0.5rem;
+}
+
+.magazine-content img {
+  border-radius: 0.75rem;
+  margin: 2.5rem 0;
+  width: 100%;
+  height: auto;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+.magazine-content a {
+  color: #111;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 500;
+}
+
+/* Custom React-Quill Editor refinement */
+.ql-toolbar.ql-snow {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-color: #e5e7eb !important;
+  background-color: #fafafa;
+  padding: 10px 14px !important;
+}
+
+.ql-container.ql-snow {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  border-color: #e5e7eb !important;
+  font-family: var(--font-sans) !important;
+  font-size: 1rem;
+}
+
+.ql-editor {
+  min-height: 220px;
+}
