@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import RichTextEditor from '../components/RichTextEditor';
 
+const API_BASE = 'https://blog-comment-jade.vercel.app';
+
 const AddBlog = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
@@ -13,7 +15,7 @@ const AddBlog = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Image upload to backend (Cloudinary)
+  // Image upload to Cloudinary via backend media route
   const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -25,7 +27,7 @@ const AddBlog = () => {
     formData.append('image', file);
 
     try {
-      const res = await fetch('https://blog-comment-jade.vercel.app/api/media/upload', {
+      const res = await fetch(`${API_BASE}/api/media/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -64,7 +66,7 @@ const AddBlog = () => {
     const token = localStorage.getItem('token');
 
     try {
-      const res = await fetch('https://blog-comment-jade.vercel.app/api/posts', {
+      const res = await fetch(`${API_BASE}/api/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+const API_BASE = 'https://blog-comment-jade.vercel.app';
+
 const BlogDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -8,8 +10,8 @@ const BlogDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch post by slug from backend
-    fetch(`https://blog-comment-jade.vercel.app/api/posts/${slug}`)
+    // First try fetching directly by slug/id
+    fetch(`${API_BASE}/api/posts/${slug}`)
       .then((res) => {
         if (!res.ok) throw new Error('Not found by slug directly');
         return res.json();
@@ -26,14 +28,15 @@ const BlogDetail = () => {
       })
       .finally(() => setLoading(false));
 
+    // Fallback: fetch all posts and find by slug or _id
     function fallbackFetch() {
-      fetch('https://blog-comment-jade.vercel.app/api/posts')
+      fetch(`${API_BASE}/api/posts?limit=200`)
         .then((r) => r.json())
-        .then((all) => {
-          if (Array.isArray(all)) {
-            const match = all.find((p) => p.slug === slug || p._id === slug);
-            if (match) setPost(match);
-          }
+        .then((data) => {
+          // API returns { posts, totalPages }
+          const allPosts = data.posts || (Array.isArray(data) ? data : []);
+          const match = allPosts.find((p) => p.slug === slug || p._id === slug);
+          if (match) setPost(match);
         })
         .catch(() => {});
     }

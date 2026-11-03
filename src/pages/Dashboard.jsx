@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import RichTextEditor from '../components/RichTextEditor';
 import { Trash2, Edit, CheckCircle2, X, AlertCircle } from 'lucide-react';
 
+const API_BASE = 'https://blog-comment-jade.vercel.app';
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -35,10 +37,18 @@ const Dashboard = () => {
   }, [navigate]);
 
   const fetchPosts = () => {
-    fetch('https://blog-comment-jade.vercel.app/api/posts')
+    // limit=100 so all blogs appear in one Dashboard view
+    fetch(`${API_BASE}/api/posts?limit=100`)
       .then(res => res.json())
-      .then(data => setPosts(data))
-      .catch(err => console.log(err));
+      .then(data => {
+        // API returns { posts, totalPages }
+        if (data.posts) {
+          setPosts(data.posts);
+        } else {
+          setPosts([]);
+        }
+      })
+      .catch(err => console.log('Error fetching posts:', err));
   };
 
   const showToast = (message, type = 'success') => {
@@ -60,7 +70,7 @@ const Dashboard = () => {
 
   const handleActualDelete = async () => {
     try {
-      const res = await fetch(`https://blog-comment-jade.vercel.app/api/posts/${deleteId}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE}/api/posts/${deleteId}`, { method: 'DELETE' });
       if (res.ok) {
         setPosts(posts.filter(p => p._id !== deleteId));
         showToast('Blog deleted successfully!', 'success');
@@ -89,7 +99,7 @@ const Dashboard = () => {
     setUpdating(true);
 
     try {
-      const res = await fetch(`https://blog-comment-jade.vercel.app/api/posts/${editId}`, {
+      const res = await fetch(`${API_BASE}/api/posts/${editId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -118,7 +128,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex font-sans relative">
-
       {/* --- TOAST NOTIFICATION --- */}
       {toast.show && (
         <div className={`fixed top-6 right-6 z-[200] flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl border animate-in slide-in-from-top-2 ${toast.type === 'success' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'}`}>
@@ -264,8 +273,6 @@ const Dashboard = () => {
       {isEditOpen && (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl relative my-8">
-
-            {/* Modal Header */}
             <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100">
               <div>
                 <h2 className="text-xl font-bold text-gray-900">Edit Publication</h2>
@@ -276,28 +283,16 @@ const Dashboard = () => {
               </button>
             </div>
 
-            {/* Modal Body */}
             <form onSubmit={handleUpdate} className="p-8 space-y-6">
-
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Article Title</label>
-                <input
-                  type="text"
-                  value={editTitle}
-                  onChange={e => setEditTitle(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 block w-full p-3 transition"
-                  required
-                />
+                <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)} className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 block w-full p-3 transition" required />
               </div>
 
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
-                  <select
-                    value={editCategory}
-                    onChange={e => setEditCategory(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 block w-full p-3 transition"
-                  >
+                  <select value={editCategory} onChange={e => setEditCategory(e.target.value)} className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 block w-full p-3 transition">
                     <option value="Destination">Destination</option>
                     <option value="Lifestyle">Lifestyle</option>
                     <option value="Culinary">Culinary</option>
@@ -306,12 +301,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL</label>
-                  <input
-                    type="text"
-                    value={editImage}
-                    onChange={e => setEditImage(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 block w-full p-3 transition"
-                  />
+                  <input type="text" value={editImage} onChange={e => setEditImage(e.target.value)} className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 block w-full p-3 transition" />
                 </div>
               </div>
 
@@ -322,7 +312,6 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Modal Footer */}
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                 <button type="button" onClick={() => setIsEditOpen(false)} className="px-5 py-2.5 text-sm font-semibold text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                   Cancel
